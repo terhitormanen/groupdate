@@ -1,7 +1,8 @@
 require "bundler/gem_tasks"
 require "rake/testtask"
 
-ADAPTERS = %w(postgresql mysql sqlite enumerable redshift)
+#ADAPTERS = %w(postgresql mysql sqlite enumerable redshift sqlserver)
+ADAPTERS = %w(enumerable sqlserver)
 
 ADAPTERS.each do |adapter|
   namespace :test do

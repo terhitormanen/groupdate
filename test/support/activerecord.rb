@@ -35,6 +35,20 @@ if ENV["ADAPTER"] == "redshift"
   ActiveRecord::Migration.execute "CREATE TABLE users (id INT IDENTITY(1,1) PRIMARY KEY, name VARCHAR(255), score INT, created_at DATETIME, created_on DATE);"
 
   ActiveRecord::Migration.execute "CREATE TABLE posts (id INT IDENTITY(1,1) PRIMARY KEY, user_id INT REFERENCES users, created_at DATETIME);"
+elsif ENV["ADAPTER"] == "sqlserver"
+  ActiveRecord::Migration.create_table :users, force: true do |t|
+    t.string :name
+    t.integer :score
+    t.datetime :created_at
+    t.datetimeoffset :deleted_at
+    t.date :created_on
+  end
+
+  ActiveRecord::Migration.create_table :posts, force: true do |t|
+    t.bigint :user_id
+    t.datetime2 :created_at
+  end
+  
 else
   ActiveRecord::Migration.create_table :users, force: true do |t|
     t.string :name
@@ -48,4 +62,6 @@ else
     t.references :user
     t.datetime :created_at
   end
+
+  
 end

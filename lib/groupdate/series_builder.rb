@@ -1,3 +1,4 @@
+require 'logger'
 module Groupdate
   class SeriesBuilder
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
@@ -290,7 +291,10 @@ module Groupdate
       @key_format ||= begin
         locale = options[:locale] || I18n.locale
         use_dates = options.key?(:dates) ? options[:dates] : Groupdate.dates
-
+        logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt0.log', 'w+')
+          
+          logger.info "use_dates: #{use_dates}"
+          
         if options[:format]
           if options[:format].respond_to?(:call)
             options[:format]
@@ -313,8 +317,15 @@ module Groupdate
             end
           end
         elsif [:day, :week, :month, :quarter, :year].include?(period) && use_dates
+          logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt1.log', 'w+')
+          logger.level = Logger::INFO
+          logger.info "k: #{k}"
           lambda { |k| k.to_date }
         else
+          logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt2.log', 'w+')
+          logger.level = Logger::INFO
+          logger.info "else k: #{k}"
+          logger.info "else use_dates: #{use_dates}"
           lambda { |k| k }
         end
       end
@@ -342,6 +353,9 @@ module Groupdate
 
     def utc
       @utc ||= ActiveSupport::TimeZone["Etc/UTC"]
+      if ENV["ADAPTER"] == 'sqlserver'
+        @utc = ActiveSupport::TimeZone["UTC"]
+      end
     end
   end
 end
