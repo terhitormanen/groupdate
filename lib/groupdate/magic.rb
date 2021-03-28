@@ -1,4 +1,5 @@
 require "i18n"
+require 'logger'
 
 module Groupdate
   class Magic
@@ -12,7 +13,7 @@ module Groupdate
 
       validate_keywords
       validate_arguments
-
+      
       if options[:n]
         raise ArgumentError, "n must be a positive integer" if !options[:n].is_a?(Integer) || options[:n] < 1
         @period = :custom
@@ -53,8 +54,8 @@ module Groupdate
     def time_zone
       @time_zone ||= begin
         if ENV["ADAPTER"] == 'sqlserver'
-          time_zone = "UTC" if options[:time_zone] == false
-          time_zone ||= options[:time_zone] || Groupdate.time_zone || (Groupdate.time_zone == false && "UTC") || Time.zone || "UTC"
+          time_zone = 'UTC' if options[:time_zone] == false
+          time_zone ||= options[:time_zone] || Groupdate.time_zone || (Groupdate.time_zone == false && 'UTC') || Time.zone || 'UTC'
           time_zone.is_a?(ActiveSupport::TimeZone) ? time_zone : ActiveSupport::TimeZone[time_zone]
         else
           time_zone = "Etc/UTC" if options[:time_zone] == false
@@ -131,6 +132,9 @@ module Groupdate
       end
 
       def perform(relation, result, default_value:)
+        logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt3.log', 'a+')
+        logger.level = Logger::INFO
+        logger "result "
         multiple_groups = relation.group_values.size > 1
 
         check_nils(result, multiple_groups, relation)
@@ -145,9 +149,12 @@ module Groupdate
       end
 
       def cast_method
+        logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt2.log', 'a+')
+        logger.level = Logger::INFO
         @cast_method ||= begin
           case period
           when :minute_of_hour, :hour_of_day, :day_of_month, :day_of_year, :month_of_year
+            logger "cast_method k: #{k}"
             lambda { |k| k.to_i }
           when :day_of_week
             lambda { |k| (k.to_i - 1 - week_start) % 7 }
@@ -166,8 +173,10 @@ module Groupdate
           else
             k = cast_method.call(k)
           end
+          logger "cast_result v: #{v}"
           new_result[k] = v
         end
+        logger "cast_result new_result: #{new_result.keys.first}"
         new_result
       end
 

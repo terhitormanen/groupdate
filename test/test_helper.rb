@@ -126,20 +126,16 @@ class Minitest::Test
   end
 
   def assert_result_date(method, expected_str, time_str, time_zone = false, options = {})
-    logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt1.log', 'a+')
-    logger.level = Logger::INFO
     create_user time_str
     expected = {Date.parse(expected_str) => 1}
     # Only UTC supported for MS SQL Server
     tz = sqlserver? ? "UTC" : "Pacific Time (US & Canada)"
     res = call_method(method, :created_at, options.merge(time_zone: time_zone ? tz : nil))
-    logger.info "assert_result_date res: #{res}, expected: #{expected}"
     assert_equal expected, res
 
-    # In MS SQL Server onyl way to get a properly formatted date with time part turncated out is to cast into date
+    # In MS SQL Server only way to get a properly formatted date with time part turncated out is to cast into date
     # but that leaves the time out altogether, so the time part test is meaningless
-    #if !sqlserver? || (sqlserver? && !%i[day, month, year].include?(method))
-    if !sqlserver? || (sqlserver? && !%i[day month].include?(method))
+    if !sqlserver? || (sqlserver? && !%i[day month year].include?(method))
       tzo = sqlserver? ? utc : pt
       expected_time = (time_zone ? tzo : utc).parse(expected_str)
       if options[:day_start]
@@ -147,7 +143,6 @@ class Minitest::Test
       end
       expected = {expected_time => 1}
     
-      logger.info "assert_result_date 2 res: #{res}, expected: #{expected}"
       tz = sqlserver? ? "UTC" : "Pacific Time (US & Canada)"
       assert_equal expected, call_method(method, :created_at, options.merge(dates: false, time_zone: time_zone ? tz : nil))
       # assert_equal expected, call_method(method, :created_on, options.merge(time_zone: time_zone ? "Pacific Time (US & Canada)" : nil))
@@ -162,11 +157,12 @@ class Minitest::Test
     create_user time_str unless attribute == :deleted_at
     tz = sqlserver? ? "UTC" : "Pacific Time (US & Canada)"
     call_method(method, attribute, options.merge(time_zone: time_zone ? tz : nil))
+    #call_method(method, attribute, options.merge(time_zone: tz))
   end
 
   def utc
     ActiveSupport::TimeZone["Etc/UTC"]
-    if ENV["ADAPTER"] == 'sqlserver'
+    if sqlserver?
       ActiveSupport::TimeZone["UTC"]
     end
   end

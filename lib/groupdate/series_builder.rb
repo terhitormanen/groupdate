@@ -69,7 +69,7 @@ module Groupdate
 
         [key, value]
       end]
-
+      
       result
     end
 
@@ -353,9 +353,9 @@ module Groupdate
 
     def utc
       @utc ||= ActiveSupport::TimeZone["Etc/UTC"]
-      if ENV["ADAPTER"] == 'sqlserver'
-        @utc = ActiveSupport::TimeZone["UTC"]
-      end
+      #if ENV["ADAPTER"] == 'sqlserver'
+       # @utc = ActiveSupport::TimeZone["UTC"]
+      #end
     end
   end
 end

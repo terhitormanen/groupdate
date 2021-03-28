@@ -18,5 +18,5 @@ tmp
 .ruby-version
 .ruby-gemset
 *.log
-.vscode
+.vscode/
 test/*_sqlserver_*.rbc
