@@ -47,11 +47,11 @@ module Groupdate
                 when :hour
                   ["DATEADD(hour, DATEDIFF(hour, 0, #{day_start_column}), 0) AT TIME ZONE ?", time_zone, time_zone]
                 when :day
-                  ["CAST(DATEADD(day, DATEDIFF(day, 0, #{day_start_column}), 0) AT TIME ZONE ? AS DATE)", time_zone, time_zone]
+                  ["CAST(DATEADD(day, DATEDIFF(day, 0, #{day_start_column}), 0) AT TIME ZONE ? AS DATETIME)", time_zone, time_zone]
                 when :month
-                  ["CAST(DATEADD(month, DATEDIFF(month, 0, #{day_start_column}), 0) AT TIME ZONE ? AS DATE)", time_zone, time_zone]
+                  ["CAST(DATEADD(month, DATEDIFF(month, 0, #{day_start_column}), 0) AT TIME ZONE ? AS DATETIME)", time_zone, time_zone]
                 when :year
-                  ["CAST(DATEADD(year, DATEDIFF(year, 0, #{day_start_column}), 0)  AT TIME ZONE ? AS DATE)", time_zone, time_zone]
+                  ["CAST(DATEADD(year, DATEDIFF(year, 0, #{day_start_column}), 0)  AT TIME ZONE ? AS DATETIME)", time_zone, time_zone]
                 else 
                   #["DATE_TRUNC(?, #{day_start_column}) AT TIME ZONE ?", period, time_zone, day_start_interval, time_zone]
                   #["(DATE_TRUNC(?, #{day_start_column}) + INTERVAL ?) AT TIME ZONE ?", period, time_zone, day_start_interval, day_start_interval, time_zone]
