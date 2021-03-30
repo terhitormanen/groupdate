@@ -4,6 +4,7 @@ module Groupdate
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
 
     CHECK_PERIODS = [:day, :week, :month, :quarter, :year]
+    @@logger = Logger.new File.new('test_run1.log', 'w')
 
     def initialize(period:, time_zone:, day_start:, week_start:, n_seconds:, **options)
       @period = period
@@ -208,7 +209,7 @@ module Groupdate
     end
 
     def generate_series(data, multiple_groups, group_index)
-      logger = Logger.new File.new('test_run1.log', 'w')
+      
       case period
       when :day_of_week
         0..6
@@ -254,7 +255,7 @@ module Groupdate
               tr
             end
           end
-          logger.info "time_range: #{time_range}"
+          @@logger.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -280,7 +281,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          logger.info "series: #{series}"
+          @@logger.info "series: #{series}"
           series
         else
           []
@@ -292,9 +293,6 @@ module Groupdate
       @key_format ||= begin
         locale = options[:locale] || I18n.locale
         use_dates = options.key?(:dates) ? options[:dates] : Groupdate.dates
-        logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt0.log', 'w+')
-          
-          logger.info "use_dates: #{use_dates}"
           
         if options[:format]
           if options[:format].respond_to?(:call)
@@ -318,13 +316,9 @@ module Groupdate
             end
           end
         elsif [:day, :week, :month, :quarter, :year].include?(period) && use_dates
-          logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt1.log', 'w+')
-          logger.level = Logger::INFO
           logger.info "k: #{k}"
           lambda { |k| k.to_date }
         else
-          logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt2.log', 'w+')
-          logger.level = Logger::INFO
           logger.info "else k: #{k}"
           logger.info "else use_dates: #{use_dates}"
           lambda { |k| k }

@@ -3,7 +3,7 @@ module Groupdate
     module Adapters
       class SQLServerAdapter < BaseAdapter
         def group_clause
-          logger = Logger.new File.new('test_run.log', 'w')
+          #logger = Logger.new File.new('test_run.log', 'w')
           # TODO Make IANA time zone name -> Windows definition mapping (for now only use UTC)
           # use xxx running it in a container with .NET core
           #time_zone = @time_zone.tzinfo.name
@@ -34,7 +34,6 @@ module Groupdate
               ["DATEADD(second, FLOOR(CAST(DATEDIFF_BIG(millisecond, CAST('1970-01-01 00:00:00' AS DATETIME2), CAST(#{column} AS DATETIME2))/1000 AS int) / ?) * ?, '1970-01-01')", n_seconds, n_seconds]
             else
               raise Groupdate::Error, 'Not implemented yet' unless day_start.zero?
-              logger.info "period: #{period}"
               day_start_column = "CAST(#{column} AS DATETIMEOFFSET) AT TIME ZONE ?"
               # :second, :minute, :hour, :day, :month, :year
               
@@ -58,7 +57,7 @@ module Groupdate
                   raise Groupdate::Error, 'Not implemented yet'
                 end
             end
-            logger.info "query: #{query}"
+            #logger.info "query: #{query}"
           @relation.send(:sanitize_sql_array, query)
         end
   
