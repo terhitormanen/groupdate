@@ -1,7 +1,7 @@
 require "i18n"
 module Groupdate
   class Magic
-    Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
+    Rails.logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate.log')
     DAYS = [:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday]
 
     attr_accessor :period, :options, :group_index, :n_seconds
@@ -125,7 +125,7 @@ module Groupdate
     end
 
     class Relation < Magic
-      Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
+      Rails.logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate.log')
       def initialize(**options)
         super(**options.reject { |k, _| [:default_value, :carry_forward, :last, :current].include?(k) })
         @options = options

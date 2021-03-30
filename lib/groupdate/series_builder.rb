@@ -1,6 +1,6 @@
 module Groupdate
   class SeriesBuilder
-    Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
+    Rails.logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate.log')
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
 
     CHECK_PERIODS = [:day, :week, :month, :quarter, :year]
