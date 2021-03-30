@@ -11,4 +11,3 @@ gem "activerecord", "~> 6.0.0"
 gem "tiny_tds", "~> 2.1"
 gem "activerecord-sqlserver-adapter", '~> 6.0.1'
 gem "ruby-prof", require: false
-gem "easy_logging"

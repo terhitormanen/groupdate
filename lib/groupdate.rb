@@ -15,12 +15,9 @@ require "groupdate/adapters/redshift_adapter"
 require "groupdate/adapters/sqlite_adapter"
 require "groupdate/adapters/sqlserver_adapter"
 
-require 'easy_logging'
-
-EasyLogging.log_destination = '/home/terhi/grdate.log'
-EasyLogging.level = Logger::DEBUG
 module Groupdate
   class Error < RuntimeError; end
+  Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
 
   PERIODS = [:second, :minute, :hour, :day, :week, :month, :quarter, :year, :day_of_week, :hour_of_day, :minute_of_hour, :day_of_month, :day_of_year, :month_of_year]
   METHODS = PERIODS.map { |v| :"group_by_#{v}" } + [:group_by_period]

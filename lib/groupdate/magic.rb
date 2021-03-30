@@ -1,9 +1,7 @@
 require "i18n"
-require 'easy_logging'
-
 module Groupdate
   class Magic
-    include EasyLogging
+    Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
     DAYS = [:monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday]
 
     attr_accessor :period, :options, :group_index, :n_seconds
@@ -127,13 +125,14 @@ module Groupdate
     end
 
     class Relation < Magic
+      Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
       def initialize(**options)
         super(**options.reject { |k, _| [:default_value, :carry_forward, :last, :current].include?(k) })
         @options = options
       end
 
       def perform(relation, result, default_value:)
-        logger.info("result #{result}")
+        Rails.logger.info("result #{result}")
         multiple_groups = relation.group_values.size > 1
 
         check_nils(result, multiple_groups, relation)
@@ -151,7 +150,7 @@ module Groupdate
         @cast_method ||= begin
           case period
           when :minute_of_hour, :hour_of_day, :day_of_month, :day_of_year, :month_of_year
-            logger.info("cast_method k: #{k}")
+            Rails.logger.info("cast_method k: #{k}")
             lambda { |k| k.to_i }
           when :day_of_week
             lambda { |k| (k.to_i - 1 - week_start) % 7 }
@@ -170,10 +169,10 @@ module Groupdate
           else
             k = cast_method.call(k)
           end
-          logger.info "cast_result v: #{v}"
+          Rails.logger.info "cast_result v: #{v}"
           new_result[k] = v
         end
-        logger.info "cast_result new_result: #{new_result.keys.first}"
+        Rails.logger.info "cast_result new_result: #{new_result.keys.first}"
         new_result
       end
 

@@ -1,7 +1,6 @@
-require 'easy_logging'
 module Groupdate
   class SeriesBuilder
-    include EasyLogging
+    Rails.logger = ActiveSupport::Logger.new(Rails.root.to_s + '/log/grdate.log')
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
 
     CHECK_PERIODS = [:day, :week, :month, :quarter, :year]
@@ -18,7 +17,7 @@ module Groupdate
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
       series = generate_series(data, multiple_groups, group_index)
-      logger.info("series_builder series: #{series}")
+      Rails.logger.info("series_builder series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -256,7 +255,7 @@ module Groupdate
               tr
             end
           end
-          logger.info "time_range: #{time_range}"
+          Rails.logger.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -282,7 +281,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          logger.info "series 2: #{series}"
+          Rails.logger.info "series 2: #{series}"
           series
         else
           []
