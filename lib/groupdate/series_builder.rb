@@ -1,6 +1,6 @@
 module Groupdate
   class SeriesBuilder
-    Rails.logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate.log')
+    
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
 
     CHECK_PERIODS = [:day, :week, :month, :quarter, :year]
@@ -16,8 +16,9 @@ module Groupdate
     end
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
+      logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate.log')
       series = generate_series(data, multiple_groups, group_index)
-      Rails.logger.info("series_builder series: #{series}")
+      logger.info("series_builder series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -209,7 +210,7 @@ module Groupdate
     end
 
     def generate_series(data, multiple_groups, group_index)
-      
+      logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate2b.log')
       case period
       when :day_of_week
         0..6
@@ -255,7 +256,7 @@ module Groupdate
               tr
             end
           end
-          Rails.logger.info "time_range: #{time_range}"
+          logger.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -281,7 +282,6 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          Rails.logger.info "series 2: #{series}"
           series
         else
           []
