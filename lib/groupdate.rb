@@ -15,6 +15,8 @@ require "groupdate/adapters/redshift_adapter"
 require "groupdate/adapters/sqlite_adapter"
 require "groupdate/adapters/sqlserver_adapter"
 
+require "logger"
+
 module Groupdate
   class Error < RuntimeError; end
 
@@ -30,7 +32,7 @@ module Groupdate
     attr_writer :logger
 
     def logger
-      @logger ||= Logger.new( File.open("grdate_logger.log", 'w')).tap do |log|
+      @logger ||= Logger.new( File.new("/home/terhi/grdate_logger.log", 'w')).tap do |log|
         log.progname = self.name
       end
     end
