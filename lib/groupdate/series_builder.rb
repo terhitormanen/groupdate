@@ -17,7 +17,7 @@ module Groupdate
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
       #logger1 = Logger.new File.new('test_run1.log', 'w')
-      logger1 = LOgger.new(STDOUT)
+      logger1 = Logger.new(STDOUT)
       logger1.level = LOGGER::INFO
       series = generate_series(data, multiple_groups, group_index)
       logger1.info("series: #{series}")
