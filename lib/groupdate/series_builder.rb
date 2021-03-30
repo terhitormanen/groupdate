@@ -4,8 +4,7 @@ module Groupdate
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
 
     CHECK_PERIODS = [:day, :week, :month, :quarter, :year]
-    @@logger = Logger.new File.new('test_run1.log', 'w')
-
+  
     def initialize(period:, time_zone:, day_start:, week_start:, n_seconds:, **options)
       @period = period
       @time_zone = time_zone
@@ -17,7 +16,9 @@ module Groupdate
     end
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
+      logger1 = Logger.new File.new('test_run1.log', 'w')
       series = generate_series(data, multiple_groups, group_index)
+      logger1.info "series: #{series}"
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -255,7 +256,7 @@ module Groupdate
               tr
             end
           end
-          @@logger.info "time_range: #{time_range}"
+          logger1.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -281,7 +282,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          @@logger.info "series: #{series}"
+          logger1.info "series 2: #{series}"
           series
         else
           []
@@ -316,11 +317,8 @@ module Groupdate
             end
           end
         elsif [:day, :week, :month, :quarter, :year].include?(period) && use_dates
-          logger.info "k: #{k}"
           lambda { |k| k.to_date }
         else
-          logger.info "else k: #{k}"
-          logger.info "else use_dates: #{use_dates}"
           lambda { |k| k }
         end
       end
@@ -348,9 +346,9 @@ module Groupdate
 
     def utc
       @utc ||= ActiveSupport::TimeZone["Etc/UTC"]
-      #if ENV["ADAPTER"] == 'sqlserver'
-       # @utc = ActiveSupport::TimeZone["UTC"]
-      #end
+      if ENV["ADAPTER"] == 'sqlserver'
+       @utc = ActiveSupport::TimeZone["UTC"]
+      end
     end
   end
 end
