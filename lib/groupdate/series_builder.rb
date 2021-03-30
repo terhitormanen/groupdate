@@ -208,6 +208,7 @@ module Groupdate
     end
 
     def generate_series(data, multiple_groups, group_index)
+      logger = Logger.new File.new('test_run1.log', 'w')
       case period
       when :day_of_week
         0..6
@@ -253,7 +254,7 @@ module Groupdate
               tr
             end
           end
-
+          logger.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -279,7 +280,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-
+          logger.info "series: #{series}"
           series
         else
           []
