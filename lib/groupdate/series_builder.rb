@@ -280,7 +280,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          #logger1.info "series 2: #{series}"
+          Groupdate.logger.info "series 2: #{series}"
           series
         else
           []

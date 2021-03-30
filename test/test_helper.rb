@@ -2,7 +2,6 @@ require "bundler/setup"
 Bundler.require(:default)
 require "minitest/autorun"
 require "minitest/pride"
-require "logger"
 require "active_record"
 require "ostruct"
 
@@ -106,8 +105,6 @@ class Minitest::Test
   end
 
   def assert_result_time(method, expected, time_str, time_zone = false, **options)
-    logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt.log', 'a+')
-    logger.level = Logger::INFO
     tz = sqlserver? ? "UTC" : "Pacific Time (US & Canada)"
     expected = {utc.parse(expected).in_time_zone(time_zone ? tz : utc) => 1}
     if sqlserver?
@@ -116,7 +113,7 @@ class Minitest::Test
     end
     
     res = result(method, time_str, time_zone, :created_at, options)
-    logger.info {"assert_result_time res: #{res}, expected: #{expected}"}
+    Groupdate.logger.info {"assert_result_time res: #{res}, expected: #{expected}"}
     assert_equal expected, res
 
     if postgresql?

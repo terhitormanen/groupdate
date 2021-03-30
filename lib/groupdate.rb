@@ -27,7 +27,8 @@ module Groupdate
   self.dates = true
 
   def self.logger
-    @@logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+    #@@logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+    @@logger = Rails.logger
   end
 
   def self.logger=(logger)
