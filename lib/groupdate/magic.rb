@@ -1,5 +1,4 @@
 require "i18n"
-require 'logger'
 
 module Groupdate
   class Magic
@@ -132,9 +131,7 @@ module Groupdate
       end
 
       def perform(relation, result, default_value:)
-        logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt3.log', 'a+')
-        logger.level = Logger::INFO
-        logger "result "
+        Groupdate.logger.info("result #{result}")
         multiple_groups = relation.group_values.size > 1
 
         check_nils(result, multiple_groups, relation)
@@ -149,12 +146,10 @@ module Groupdate
       end
 
       def cast_method
-        logger = Logger.new File.new('/home/terhi/groupdate/test_run_tt2.log', 'a+')
-        logger.level = Logger::INFO
         @cast_method ||= begin
           case period
           when :minute_of_hour, :hour_of_day, :day_of_month, :day_of_year, :month_of_year
-            logger "cast_method k: #{k}"
+            Groupdate.logger.info("cast_method k: #{k}")
             lambda { |k| k.to_i }
           when :day_of_week
             lambda { |k| (k.to_i - 1 - week_start) % 7 }
@@ -173,10 +168,10 @@ module Groupdate
           else
             k = cast_method.call(k)
           end
-          logger "cast_result v: #{v}"
+          Groupdate.logger.info "cast_result v: #{v}"
           new_result[k] = v
         end
-        logger "cast_result new_result: #{new_result.keys.first}"
+        Groupdate.logger.info "cast_result new_result: #{new_result.keys.first}"
         new_result
       end
 

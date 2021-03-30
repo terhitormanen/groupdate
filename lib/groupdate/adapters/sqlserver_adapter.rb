@@ -1,9 +1,7 @@
-require "logger"
 module Groupdate
     module Adapters
       class SQLServerAdapter < BaseAdapter
         def group_clause
-          #logger = Logger.new File.new('test_run.log', 'w')
           # TODO Make IANA time zone name -> Windows definition mapping (for now only use UTC)
           # use xxx running it in a container with .NET core
           #time_zone = @time_zone.tzinfo.name
@@ -57,7 +55,6 @@ module Groupdate
                   raise Groupdate::Error, 'Not implemented yet'
                 end
             end
-            #logger.info "query: #{query}"
           @relation.send(:sanitize_sql_array, query)
         end
   

@@ -1,4 +1,3 @@
-require 'logger'
 module Groupdate
   class SeriesBuilder
     attr_reader :period, :time_zone, :day_start, :week_start, :n_seconds, :options
@@ -16,11 +15,8 @@ module Groupdate
     end
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
-      #logger1 = Logger.new File.new('test_run1.log', 'w')
-      logger1 = Logger.new(STDOUT)
-      logger1.level = LOGGER::INFO
       series = generate_series(data, multiple_groups, group_index)
-      logger1.info("series: #{series}")
+      Groupdate.logger.info("series_builder series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -258,7 +254,7 @@ module Groupdate
               tr
             end
           end
-          #logger1.info "time_range: #{time_range}"
+          Groupdate.logger.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 

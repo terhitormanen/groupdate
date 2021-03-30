@@ -26,6 +26,14 @@ module Groupdate
   self.day_start = 0
   self.dates = true
 
+  def self.logger
+    @@logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+  end
+
+  def self.logger=(logger)
+    @@logger = logger
+  end
+
   # api for gems like ActiveMedian
   def self.process_result(relation, result, **options)
     if relation.groupdate_values
