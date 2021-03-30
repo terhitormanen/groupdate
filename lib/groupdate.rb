@@ -28,7 +28,7 @@ module Groupdate
 
   def self.logger
     #@@logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
-    @@logger = Rails.logger
+    @@logger = ActiveSupport::Logger.new("groupdate.log", 'INFO')
   end
 
   def self.logger=(logger)
