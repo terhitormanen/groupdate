@@ -16,9 +16,7 @@ module Groupdate
     end
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
-      logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate.log')
       series = generate_series(data, multiple_groups, group_index)
-      logger.info("series_builder series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -210,7 +208,6 @@ module Groupdate
     end
 
     def generate_series(data, multiple_groups, group_index)
-      logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate2b.log')
       case period
       when :day_of_week
         0..6
@@ -256,7 +253,7 @@ module Groupdate
               tr
             end
           end
-          logger.info "time_range: #{time_range}"
+          
         if time_range.begin
           series = [round_time(time_range.begin)]
 

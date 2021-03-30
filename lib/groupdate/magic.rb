@@ -132,8 +132,6 @@ module Groupdate
       end
 
       def perform(relation, result, default_value:)
-        logger = ActiveSupport::Logger.new('/home/terhi/Documents/grdate2.log')
-        logger.info("result #{result}")
         multiple_groups = relation.group_values.size > 1
 
         check_nils(result, multiple_groups, relation)
