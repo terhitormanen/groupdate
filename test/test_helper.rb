@@ -113,7 +113,6 @@ class Minitest::Test
     end
     
     res = result(method, time_str, time_zone, :created_at, options)
-    Groupdate.logger.info {"assert_result_time res: #{res}, expected: #{expected}"}
     assert_equal expected, res
 
     if postgresql?

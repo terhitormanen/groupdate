@@ -15,8 +15,10 @@ require "groupdate/adapters/redshift_adapter"
 require "groupdate/adapters/sqlite_adapter"
 require "groupdate/adapters/sqlserver_adapter"
 
-require "logger"
+require 'easy_logging'
 
+EasyLogging.log_destination = '/home/terhi/grdate.log'
+EasyLogging.level = Logger::DEBUG
 module Groupdate
   class Error < RuntimeError; end
 
@@ -28,17 +30,8 @@ module Groupdate
   self.day_start = 0
   self.dates = true
   
-  class << self
-    attr_writer :logger
 
-    def logger
-      @logger ||= Logger.new( File.new("/home/terhi/grdate_logger.log", 'w')).tap do |log|
-        log.progname = self.name
-      end
-    end
 
-  end
- 
 
   # api for gems like ActiveMedian
   def self.process_result(relation, result, **options)
