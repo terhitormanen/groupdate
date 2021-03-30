@@ -16,7 +16,7 @@ module Groupdate
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
       series = generate_series(data, multiple_groups, group_index)
-      Groupdate.logger.info("series_builder series: #{series}")
+      Rails.logger.info("series_builder series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -254,7 +254,7 @@ module Groupdate
               tr
             end
           end
-          Groupdate.logger.info "time_range: #{time_range}"
+          Rails.logger.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -280,7 +280,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          Groupdate.logger.info "series 2: #{series}"
+          Rails.logger.info "series 2: #{series}"
           series
         else
           []

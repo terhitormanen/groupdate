@@ -131,7 +131,7 @@ module Groupdate
       end
 
       def perform(relation, result, default_value:)
-        Groupdate.logger.info("result #{result}")
+        Rails.logger.info("result #{result}")
         multiple_groups = relation.group_values.size > 1
 
         check_nils(result, multiple_groups, relation)
@@ -149,7 +149,7 @@ module Groupdate
         @cast_method ||= begin
           case period
           when :minute_of_hour, :hour_of_day, :day_of_month, :day_of_year, :month_of_year
-            Groupdate.logger.info("cast_method k: #{k}")
+            Rails.logger.info("cast_method k: #{k}")
             lambda { |k| k.to_i }
           when :day_of_week
             lambda { |k| (k.to_i - 1 - week_start) % 7 }
@@ -168,10 +168,10 @@ module Groupdate
           else
             k = cast_method.call(k)
           end
-          Groupdate.logger.info "cast_result v: #{v}"
+          Rails.logger.info "cast_result v: #{v}"
           new_result[k] = v
         end
-        Groupdate.logger.info "cast_result new_result: #{new_result.keys.first}"
+        Rails.logger.info "cast_result new_result: #{new_result.keys.first}"
         new_result
       end
 
