@@ -16,9 +16,11 @@ module Groupdate
     end
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
-      logger1 = Logger.new File.new('test_run1.log', 'w')
+      #logger1 = Logger.new File.new('test_run1.log', 'w')
+      logger1 = LOgger.new(STDOUT)
+      logger1.level = LOGGER::INFO
       series = generate_series(data, multiple_groups, group_index)
-      logger1.info "series: #{series}"
+      logger1.info("series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
@@ -256,7 +258,7 @@ module Groupdate
               tr
             end
           end
-          logger1.info "time_range: #{time_range}"
+          #logger1.info "time_range: #{time_range}"
         if time_range.begin
           series = [round_time(time_range.begin)]
 
@@ -282,7 +284,7 @@ module Groupdate
             series << next_step
             last_step = next_step
           end
-          logger1.info "series 2: #{series}"
+          #logger1.info "series 2: #{series}"
           series
         else
           []
