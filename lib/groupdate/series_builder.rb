@@ -1,3 +1,4 @@
+require 'easy_logging'
 module Groupdate
   class SeriesBuilder
     include EasyLogging

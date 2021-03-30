@@ -1,4 +1,5 @@
 require "i18n"
+require 'easy_logging'
 
 module Groupdate
   class Magic
