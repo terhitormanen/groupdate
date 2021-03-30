@@ -131,7 +131,7 @@ module Groupdate
       end
 
       def perform(relation, result, default_value:)
-        Rails.logger.info("result #{result}")
+        Groupdate.logger.info("result #{result}")
         multiple_groups = relation.group_values.size > 1
 
         check_nils(result, multiple_groups, relation)
@@ -149,7 +149,7 @@ module Groupdate
         @cast_method ||= begin
           case period
           when :minute_of_hour, :hour_of_day, :day_of_month, :day_of_year, :month_of_year
-            Rails.logger.info("cast_method k: #{k}")
+            Groupdate.logger.info("cast_method k: #{k}")
             lambda { |k| k.to_i }
           when :day_of_week
             lambda { |k| (k.to_i - 1 - week_start) % 7 }
@@ -168,16 +168,16 @@ module Groupdate
           else
             k = cast_method.call(k)
           end
-          Rails.logger.info "cast_result v: #{v}"
+          Groupdate.logger.info "cast_result v: #{v}"
           new_result[k] = v
         end
-        Rails.logger.info "cast_result new_result: #{new_result.keys.first}"
+        Groupdate.logger.info "cast_result new_result: #{new_result.keys.first}"
         new_result
       end
 
       def time_zone_support?(relation)
         if relation.connection.adapter_name =~ /mysql/i
-          # need to call klass for Rails < 5.2
+          # need to call klass for Groupdate < 5.2
           sql = relation.klass.send(:sanitize_sql_array, ["SELECT CONVERT_TZ(NOW(), '+00:00', ?)", time_zone.tzinfo.name])
           !relation.connection.select_all(sql).first.values.first.nil?
         else

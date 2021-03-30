@@ -25,15 +25,18 @@ module Groupdate
   self.week_start = :sunday
   self.day_start = 0
   self.dates = true
+  
+  class << self
+    attr_writer :logger
 
-  def self.logger
-    #@@logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
-    @@logger = ActiveSupport::Logger.new("groupdate.log", 'INFO')
-  end
+    def logger
+      @logger ||= Logger.new( File.open("grdate_logger.log", 'w')).tap do |log|
+        log.progname = self.name
+      end
+    end
 
-  def self.logger=(logger)
-    @@logger = logger
   end
+ 
 
   # api for gems like ActiveMedian
   def self.process_result(relation, result, **options)
