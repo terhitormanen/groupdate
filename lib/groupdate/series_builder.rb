@@ -1,4 +1,3 @@
-require 'logger'
 module Groupdate
   class SeriesBuilder
     
@@ -14,18 +13,10 @@ module Groupdate
       @n_seconds = n_seconds
       @options = options
       @week_start_key = Groupdate::Magic::DAYS[@week_start] if @week_start
-      #fi = File.open('test_log.log', File::WRONLY | File::APPEND)
-      #@@logger = Logger.new(File.open('/home/terhi/groupdate/test_log.log', File::WRONLY | File::APPEND))
-      #@@logger.level = Logger::DEBUG
     end
 
     def generate(data, default_value:, series_default: true, multiple_groups: false, group_index: nil)
-      #fi = File.open('/home/terhi/groupdate/test_log1.log', File::WRONLY | File::APPEND | File::CREAT)
-      logger = Logger.new(File.open('/home/terhi/groupdate/test_log1.log', File::WRONLY | File::APPEND | File::CREAT))
-      logger.level = Logger::DEBUG
-      logger.info("SeriesBuilder generate data: #{data}")
       series = generate_series(data, multiple_groups, group_index)
-      logger.info("SeriesBuilder generate series: #{series}")
       series = handle_multiple(data, series, multiple_groups, group_index)
 
       verified_data = {}
