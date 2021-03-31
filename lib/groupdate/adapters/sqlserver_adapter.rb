@@ -38,7 +38,8 @@ module Groupdate
                 case period
                 when :second
                   day_start_column = "CAST(#{column} AS DATETIMEOFFSET)"
-                  ["DATEADD(millisecond, - DATEPART(millisecond, #{day_start_column}), #{day_start_column}) AT TIME ZONE ?", time_zone]
+                  # This rounds up a bit
+                  ["CONVERT(DATETIMEOFFSET, CONVERT(CHAR(19),#{day_start_column}, 126)) AT TIME ZONE ?", time_zone]
                 when :minute
                   ["DATEADD(minute, DATEDIFF(minute, 0, #{day_start_column}), 0) AT TIME ZONE ?", time_zone, time_zone]
                 when :hour

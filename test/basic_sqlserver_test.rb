@@ -5,7 +5,17 @@ class BasicTest < Minitest::Test
   # second
 
   def test_second_end_of_second
-    assert_result_time :second, "2013-05-03 00:00:00 UTC", "2013-05-03 00:00:00.999"
+    # Chnage for SQL Server, all solutions round seconds
+    assert_result_time :second, "2013-05-03 00:00:01 UTC", "2013-05-03 00:00:00.999"
+  end
+
+  def test_second_end_of_second_1
+    assert_result_time :second, "2013-05-03 00:00:00 UTC", "2013-05-03 00:00:00.99"
+  end
+
+  def test_second_end_of_second_2
+    # This rounds up
+    assert_result_time :second, "2013-05-03 00:00:01 UTC", "2013-05-03 00:00:00.999"
   end
 
   def test_second_start_of_second
@@ -94,9 +104,9 @@ class BasicTest < Minitest::Test
     assert_result_date :month, "2013-06-01", "2013-06-01 00:00:00"
   end
 
-  #def test_month_end_of_month_with_time_zone
-  #  assert_result_date :month, "2013-05-01", "2013-06-01 06:59:59", true
-  #end
+  def test_month_end_of_month_with_time_zone
+    assert_result_date :month, "2013-05-01", "2013-06-01 06:59:59", true
+  end
 
   def test_month_start_of_month_with_time_zone
     assert_result_date :month, "2013-06-01", "2013-06-01 07:00:00", true

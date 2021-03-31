@@ -107,10 +107,6 @@ class Minitest::Test
   def assert_result_time(method, expected, time_str, time_zone = false, **options)
     tz = sqlserver? ? "UTC" : "Pacific Time (US & Canada)"
     expected = {utc.parse(expected).in_time_zone(time_zone ? tz : utc) => 1}
-    if sqlserver?
-      # only UTC supported for now
-      expected = {utc.parse(expected).in_time_zone(utc) => 1}
-    end
     
     res = result(method, time_str, time_zone, :created_at, options)
     assert_equal expected, res
@@ -157,10 +153,8 @@ class Minitest::Test
   end
 
   def utc
+    return ActiveSupport::TimeZone["UTC"] if sqlserver? || postgresql?
     ActiveSupport::TimeZone["Etc/UTC"]
-    if sqlserver?
-      ActiveSupport::TimeZone["UTC"]
-    end
   end
 
   def pt

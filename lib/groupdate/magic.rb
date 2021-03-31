@@ -1,4 +1,5 @@
 require "i18n"
+require 'logger'
 module Groupdate
   class Magic
     
@@ -125,24 +126,30 @@ module Groupdate
     end
 
     class Relation < Magic
-      
+      @@logger = Logger.new(File.open('/home/terhi/groupdate/test_log.log', File::WRONLY | File::APPEND | File::CREAT ))
+      @@logger.level = Logger::DEBUG
       def initialize(**options)
         super(**options.reject { |k, _| [:default_value, :carry_forward, :last, :current].include?(k) })
         @options = options
+        @@logger.info("Magic initialize")
       end
 
       def perform(relation, result, default_value:)
+        #logger = Logger.new(File.open('/home/terhi/groupdate/test_log.log', File::WRONLY | File::APPEND | File::CREAT ))
+        #logger.level = Logger::DEBUG
+        @@logger.info("Magic perform start")
         multiple_groups = relation.group_values.size > 1
-
+        @@logger.info("Magic perform result 1: #{result}")
         check_nils(result, multiple_groups, relation)
         result = cast_result(result, multiple_groups)
-
+        @@logger.info("Magic perform cast result: #{result}")
         series_builder.generate(
           result,
           default_value: options.key?(:default_value) ? options[:default_value] : default_value,
           multiple_groups: multiple_groups,
           group_index: group_index
         )
+
       end
 
       def cast_method
@@ -154,6 +161,7 @@ module Groupdate
             lambda { |k| (k.to_i - 1 - week_start) % 7 }
           else
             utc = ActiveSupport::TimeZone["UTC"]
+            
             lambda { |k| (k.is_a?(String) || !k.respond_to?(:to_time) ? utc.parse(k.to_s) : k.to_time).in_time_zone(time_zone) }
           end
         end
@@ -162,6 +170,8 @@ module Groupdate
       def cast_result(result, multiple_groups)
         new_result = {}
         result.each do |k, v|
+          @@logger.info("Magic perform cast_method k: #{k}") if !k.nil?
+          @@logger.info("Magic perform cast_method k is nil!") if k.nil?
           if multiple_groups
             k[group_index] = cast_method.call(k[group_index])
           else
